@@ -1,12 +1,9 @@
 package thoughtworks
 
-import org.apache.spark._
 import org.apache.spark.sql.SparkSession
-import org.apache.spark.streaming._
-import org.apache.log4j.{Level, LogManager}
 import org.apache.spark.sql.functions._
 
-object AppendMode {
+object _2OutputComplete {
 
   def main(args: Array[String]): Unit = {
     // Create Spark Session
@@ -27,11 +24,12 @@ object AppendMode {
     // Split each line into words
     val words = sourceDF
       .select(explode(split(col("value"), " ")).as("words"))
-      .withColumn("count", lit(1))
+      .groupBy("words")
+      .count()
 
     // Sink
     val sink = words.writeStream
-      .outputMode("append")
+      .outputMode("complete")
       .format("console")
 
     sink.start().awaitTermination()

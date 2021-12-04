@@ -5,7 +5,7 @@ import org.apache.spark._
 import org.apache.spark.streaming._
 import org.apache.spark.streaming.StreamingContext._
 
-object SimpleRead {
+object _0SimpleRead {
 //  val log = LogManager.getRootLogger
 //  log.setLevel(Level.INFO)
 
