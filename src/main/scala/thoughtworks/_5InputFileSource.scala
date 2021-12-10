@@ -3,6 +3,7 @@ package thoughtworks
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.sql.functions._
 import org.apache.spark.sql.types._
+import org.apache.spark.sql.streaming.OutputMode
 
 object _5InputFileSource {
 
@@ -10,7 +11,7 @@ object _5InputFileSource {
     // Create Spark Session
     val spark = SparkSession.builder()
       .master("local")
-      .appName("Socket Source")
+      .appName("File Source")
       .getOrCreate()
 
     // Set Spark logging level to ERROR.
@@ -37,7 +38,7 @@ object _5InputFileSource {
       .option("maxFilesPerTrigger", 2) // This will read maximum of 2 files per mini batch. However, it can read less than 2 files.
       .option("header", true)
       .schema(schema)
-      .load("data/pokemon*.csv")
+      .load("data/pokemon*.csv") // asterisk is important here
 
     // Do some transform
     val pokemon = sourceDF
@@ -46,7 +47,7 @@ object _5InputFileSource {
 
     // Sink
     val sink = pokemon.writeStream
-      .outputMode("update")
+      .outputMode(OutputMode.Update)
       .format("console")
 
     sink.start().awaitTermination()

@@ -2,6 +2,7 @@ package thoughtworks
 
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.sql.functions._
+import org.apache.spark.sql.streaming.OutputMode
 
 object _3OutputUpdate {
 
@@ -29,7 +30,7 @@ object _3OutputUpdate {
 
     // Sink
     val sink = words.writeStream
-      .outputMode("update")
+      .outputMode(OutputMode.Update)
       .format("console")
 
     sink.start().awaitTermination()

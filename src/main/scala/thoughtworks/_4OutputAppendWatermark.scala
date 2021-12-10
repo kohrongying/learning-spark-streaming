@@ -1,12 +1,9 @@
 package thoughtworks
 
-import org.apache.spark._
 import org.apache.spark.sql.SparkSession
-import org.apache.spark.streaming._
-import org.apache.log4j.{Level, LogManager}
 import org.apache.spark.sql.functions._
 
-object OutputAppend {
+object _4OutputAppendWatermark {
 
   def main(args: Array[String]): Unit = {
     // Create Spark Session
@@ -24,10 +21,16 @@ object OutputAppend {
       .option("port", "9999")
       .load()
 
+    import spark.implicits._
+
     // Split each line into words
     val words = sourceDF
-      .select(explode(split(col("value"), " ")).as("words"))
-      .withColumn("count", lit(1))
+//      .select(explode(split(col("value"), " ")).as("words"))
+      .groupBy(
+        window($"timestamp", "10 minutes", "5 minutes"),
+        $"word"
+      )
+      .count()
 
     // Sink
     val sink = words.writeStream

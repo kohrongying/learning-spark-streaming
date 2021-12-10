@@ -1,10 +1,8 @@
 package thoughtworks
 
-import org.apache.spark._
 import org.apache.spark.sql.SparkSession
-import org.apache.spark.streaming._
-import org.apache.log4j.{Level, LogManager}
 import org.apache.spark.sql.functions._
+import org.apache.spark.sql.streaming.OutputMode
 
 object _1OutputAppend {
 
@@ -31,7 +29,7 @@ object _1OutputAppend {
 
     // Sink
     val sink = words.writeStream
-      .outputMode("append")
+      .outputMode(OutputMode.Append)
       .format("console")
 
     sink.start().awaitTermination()
