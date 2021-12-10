@@ -40,10 +40,27 @@ nc -lk 9999
 
 ### 2. File source
 File Data Source Streaming Example using the concept of checkpointing
-```aidl
-Base Path error
 ```
+ Option 'basePath' must be a directory
+ works when set `.load("data/pokemon.csv")`
+```
+Paths in structured streaming needs to be a directory and not a file
 #### Checkpointing
+To ensure queries are fault tolerant, enable query checkpointing.
+How to execute:
+1. Run part 6 first
+2. Stop run
+3. ./gen_pokemon.sh 
+4. Run part 6 again
+
+`chkpt` folder
+- commits/
+    - Gets incremented after stopped
+- offsets/
+- sources/
+    - List of file paths
+- state/
+- metadata
 
 ## Kafka
 Kafka Data Source Streaming example
