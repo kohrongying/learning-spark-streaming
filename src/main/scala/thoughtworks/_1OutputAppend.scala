@@ -9,7 +9,7 @@ object _1OutputAppend {
   def main(args: Array[String]): Unit = {
     // Create Spark Session
     val spark = SparkSession.builder()
-      .master("local")
+      .master("local[*]")
       .appName("Socket Source")
       .getOrCreate()
 

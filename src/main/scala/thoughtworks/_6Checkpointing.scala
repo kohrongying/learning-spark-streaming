@@ -49,7 +49,7 @@ object _6Checkpointing {
     val sink = pokemon.writeStream
       .outputMode(OutputMode.Update)
       .format("console")
-      .option("checkpointLocation", "chkpt")
+      .option("checkpointLocation", "chkpt") // necessary for checkpointing
 
     sink.start().awaitTermination()
   }
