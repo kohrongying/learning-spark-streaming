@@ -46,7 +46,10 @@ Supported for only those queries where rows added will never change:
 
 #### Watermarking
 - Watermarking is a way to help deal with lateness. It defines a threshold for the system to wait for late events.
-- If event arrives within watermark/threshold, it will be part of the update.
+- If event arrives within watermark/threshold, it will be part of the update. Else it will be dropped.
+- For stateful operations (aggregrations)
+- State store is saved in RAM. Events outside watermark is dropped. 
+- Efficient use of limited resources (RAM)
 - Helps with fault tolerance and out of order data
 - Supports either update or append output modes
 
