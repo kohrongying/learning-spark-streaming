@@ -49,7 +49,9 @@ object _6Checkpointing {
     val sink = pokemon.writeStream
       .outputMode(OutputMode.Update)
       .format("console")
+      .queryName("highestHP") // table name
       .option("checkpointLocation", "chkpt") // necessary for checkpointing
+
 
     sink.start().awaitTermination()
   }

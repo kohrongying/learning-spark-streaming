@@ -93,11 +93,19 @@ How to execute:
 `chkpt` folder
 - commits/
     - Gets incremented after stopped
+    - kind of marker file with information for watermark used in next batch
 - offsets/
+    - contains file with information about data processed in given micro-batch
+    - generated before physical execution
 - sources/
     - List of file paths
 - state/
+    - For stateful processing logic
 - metadata
+
+Note: If you want to use the checkpoint as your main fault-tolerance mechanism and you configure it with spark.sql.streaming.checkpointLocation, always define the queryName sink option. Otherwise when the query will restart, Apache Spark will create a completely new checkpoint directory and, therefore, do not restore your checkpointed state!
+
+
 
 ## Kafka
 Kafka Data Source Streaming example
