@@ -19,7 +19,19 @@ without watermark;
 ```
 Guarantees that each row will be output only once (assuming fault-tolerant sink). 
 
-#### Watermarking?
+#### Watermarking
+Supports either update or append output modes
+
+- Add option to include timestamp
+```
+spark.readStream.option("includeTimestamp",  true) 
+```
+
+- use withWatermark 
+```
+words.withWatermark("timestamp", "2 minutes") // late arrivals of up to 2 mins
+```
+Note: withWatermark must be called on the same column used in the aggregate for `append` output mode. Else will be invalid.
 
 ### 2. Complete
 The whole Result Table will be outputted to the sink after every trigger. This is supported for aggregation queries.

@@ -2,6 +2,7 @@ package thoughtworks
 
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.sql.functions._
+import org.apache.spark.sql.streaming.OutputMode
 
 object _4OutputAppendWatermark {
 
@@ -19,22 +20,23 @@ object _4OutputAppendWatermark {
       .format("socket")
       .option("host", "localhost")
       .option("port", "9999")
+      .option("includeTimestamp",  true) // necessary for watermarking
       .load()
 
     import spark.implicits._
 
     // Split each line into words
     val words = sourceDF
-//      .select(explode(split(col("value"), " ")).as("words"))
-      .groupBy(
-        window($"timestamp", "10 minutes", "5 minutes"),
-        $"word"
-      )
+      .select(explode(split(col("value"), " ")).as("words"), col("timestamp"))
+
+    val windowedCounts = words
+      .withWatermark("timestamp", "2 minutes") // late arrivals of up to 2 mins
+      .groupBy("words")
       .count()
 
     // Sink
-    val sink = words.writeStream
-      .outputMode("append")
+    val sink = windowedCounts.writeStream
+      .outputMode(OutputMode.Update)
       .format("console")
 
     sink.start().awaitTermination()
